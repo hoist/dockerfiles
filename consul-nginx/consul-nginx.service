@@ -1,0 +1,22 @@
+[Unit]
+Description=Starts NGINX rewriter
+PartOf=nginx.service
+Requires=consul.service
+After=nginx.service
+After=consul.service
+
+[Service]
+KillMode=none
+Restart=on-failure
+RestartSec=240
+User=core
+ExecStartPre=-/usr/bin/docker kill consul-nginx
+ExecStartPre=-/usr/bin/docker rm consul-nginx
+ExecStartPre=-/usr/bin/docker pull quay.io/hoist/consul-nginx:1.6
+ExecStart=/usr/bin/docker run  --name consul-nginx -e CONSUL_TEMPLATE_LOG=debug -v /var/run/docker.sock:/tmp/docker.sock --volumes-from nginx  quay.io/hoist/consul-nginx:1.6
+ExecStop=/usr/bin/docker stop consul-nginx
+TimeoutStartSec=30m
+
+[X-Fleet]
+Global=true
+MachineMetadata=container_type=web

@@ -1,0 +1,38 @@
+rabbit1:
+  build: .
+  hostname: rabbit1
+  environment: 
+    - ERLANG_COOKIE=ERLANGCOOKIETEST
+    - RABBITMQ_PASS=PASSWORD
+  ports:
+    - "5672:5672"
+    - "15672:15672"
+
+rabbit2:
+  build: .
+  hostname: rabbit2
+  links:
+    - rabbit1
+  environment: 
+   - CLUSTERED=true
+   - CLUSTER_WITH=rabbit1
+   - RAM_NODE=true
+   - ERLANG_COOKIE=ERLANGCOOKIETEST
+   - RABBITMQ_PASS=PASSWORD
+  ports:
+      - "5673:5672"
+      - "15673:15672"
+
+rabbit3:
+  build: .
+  hostname: rabbit3
+  links:
+    - rabbit1
+    - rabbit2
+  environment: 
+   - CLUSTERED=true
+   - CLUSTER_WITH=rabbit1
+   - ERLANG_COOKIE=ERLANGCOOKIETEST
+   - RABBITMQ_PASS=PASSWORD
+  ports:
+        - "5674:5672"

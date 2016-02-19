@@ -1,0 +1,34 @@
+version: 0.1
+log:
+  level: debug
+  fields:
+    service: registry
+    environment: live
+storage:
+    s3:
+        accesskey: accesskey
+        secretkey: accesssecret
+        region: us-west-2
+        bucket: hoist-registry-1
+        encrypt: true
+        secure: true
+        v4auth: true
+        chunksize: 5242880
+        rootdirectory: /registry
+http:
+    addr: 0.0.0.0:5000
+    secret: hoist-secret
+    debug:
+        addr: 0.0.0.0:5001
+    tls:
+        certificate: /certs/hoist.io.crt
+        key: /certs/hoist.io.key
+redis:
+  addr: redis.service.consul:6379
+  pool:
+    maxidle: 16
+    maxactive: 64
+    idletimeout: 300s
+  dialtimeout: 10ms
+  readtimeout: 10ms
+  writetimeout: 10ms
